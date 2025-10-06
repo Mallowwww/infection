@@ -33,7 +33,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 @Mod(ExampleMod.MODID)
 public class ExampleMod {
-    public static final String MODID = "examplemod";
+    public static final String MODID = "infection";
     public static final Logger LOGGER = LogUtils.getLogger();
     public ExampleMod(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::commonSetup);
