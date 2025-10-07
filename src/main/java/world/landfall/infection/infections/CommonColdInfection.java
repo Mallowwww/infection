@@ -30,13 +30,13 @@ public class CommonColdInfection extends Infection {
 
     @Override
     public Collection<ResourceLocation> validStages() {
-        return List.of(ModInfections.COMMON_COLD_INITIAL_STAGE.getId());
+        return List.of(ResourceLocation.parse("infection:common_cold_initial"));
     }
     public static class CommonColdStageOne extends InfectionStage {
 
         @Override
         public ResourceLocation nextStage() {
-            return ModInfections.NONE_STAGE.getId();
+            return ResourceLocation.parse("infection:none");
         }
 
         @Override

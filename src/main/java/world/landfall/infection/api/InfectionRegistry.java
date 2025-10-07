@@ -45,12 +45,12 @@ public class InfectionRegistry {
         if (!infection.isActive()) {
             return;
         }
-        if (infection.getCurrentStage().location() == null) {
+        if (infection.getCurrentStage().type == null) {
             LOGGER.error("Error ticking infection {} ! Current stage has no location.", infection.location().getPath());
         }
-        if (infection.validStages().stream().noneMatch(infection.getCurrentStage().location()::equals)) {
+        if (infection.validStages().stream().noneMatch(infection.getCurrentStage().type::equals)) {
             System.out.println(infection.validStages());
-            System.out.println(infection.getCurrentStage().location());
+            System.out.println(infection.getCurrentStage().type);
             //LOGGER.error("Error ticking infection {} ! Current stage is not valid.", infection.location().getPath());
             player.setData(ModAttachments.ACTIVE_INFECTION, ModInfections.NONE_INFECTION.get());
             return;

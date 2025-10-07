@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public abstract class Infection {
-    private InfectionStage currentStage;
+    private InfectionStageInstance currentStage;
     public Infection() {
 
     }
@@ -22,16 +22,23 @@ public abstract class Infection {
         if (currentStage == null)
             return;
         currentStage.tick(player);
-        if (currentStage.getTimeExisted() >= currentStage.lengthInTicks() && currentStage.lengthInTicks() >= 0)
-            currentStage = ModInfections.NONE_STAGE.get();
+        if (currentStage.getTimeExisted() >= currentStage.getType().lengthInTicks() && currentStage.getType().lengthInTicks() >= 0)
+            currentStage = ModInfections.NONE_STAGE.get().create();
     }
     public void activate() {
-        currentStage = InfectionRegistry.STAGE_REGISTRY.get(initialStage());
+        currentStage = InfectionRegistry.STAGE_REGISTRY.get(initialStage()).create();
+//        if (currentStage!=null)
+//            currentStage.reset();
     }
     public boolean isActive() {
         return currentStage != null;
     }
-    public InfectionStage getCurrentStage() {
+    public void setCurrentStage(ResourceLocation location) {
+        var stage = InfectionRegistry.STAGE_REGISTRY.get(location);
+        if (stage != null)
+            currentStage = stage.create();
+    }
+    public InfectionStageInstance getCurrentStage() {
         return currentStage;
     }
     public abstract ResourceLocation location();

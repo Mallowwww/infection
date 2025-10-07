@@ -19,10 +19,10 @@ import java.util.function.Supplier;
 public class ModInfections {
     private static final DeferredRegister<Infection> INFECTIONS = DeferredRegister.create(InfectionRegistry.INFECTION_REGISTRY, InfectionMod.MODID);
     private static final DeferredRegister<InfectionStage> STAGES = DeferredRegister.create(InfectionRegistry.STAGE_REGISTRY, InfectionMod.MODID);
-    public static final DeferredHolder<InfectionStage,InfectionStage> NONE_STAGE = STAGES.register("none", () -> new InfectionStage() {
+    public static final Supplier<InfectionStage> NONE_STAGE = STAGES.register("none", () -> new InfectionStage() {
         @Override
         public ResourceLocation nextStage() {
-            return NONE_STAGE.getId();
+            return ResourceLocation.parse("infections:none");
         }
 
         @Override
@@ -53,7 +53,7 @@ public class ModInfections {
 
         @Override
         public ResourceLocation initialStage() {
-            return NONE_STAGE.getId();
+            return ResourceLocation.parse("infection:none");
         }
 
         @Override
@@ -61,8 +61,10 @@ public class ModInfections {
             return List.of(InfectionMod.path("none"));
         }
     });
-    public static final DeferredHolder<InfectionStage, InfectionStage> COMMON_COLD_INITIAL_STAGE = STAGES.register("common_cold_initial", CommonColdInfection.CommonColdStageOne::new);
-    public static final DeferredHolder<Infection, Infection> COMMON_COLD_INFECTION = INFECTIONS.register("common_cold", CommonColdInfection::new);
+
+
+    public static final Supplier<InfectionStage> COMMON_COLD_INITIAL_STAGE = STAGES.register("common_cold_initial", CommonColdInfection.CommonColdStageOne::new);
+    public static final Supplier<Infection> COMMON_COLD_INFECTION = INFECTIONS.register("common_cold", CommonColdInfection::new);
     public static void register(IEventBus eventBus) {
         STAGES.register(eventBus);
         INFECTIONS.register(eventBus);

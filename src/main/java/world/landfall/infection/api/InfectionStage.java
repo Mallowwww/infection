@@ -12,23 +12,12 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public abstract class InfectionStage {
-    private int timeExisted = 0;
     public abstract ResourceLocation nextStage();
     public abstract int stageNumber();
     public abstract int lengthInTicks(); // make this negative if it does not advance to another stage
     public abstract Collection<Holder<MobEffect>> currentEffects();
     public abstract ResourceLocation location();
-    public void tick(Player player) {
-        timeExisted++;
-        for (var x : currentEffects())
-            player.addEffect(new MobEffectInstance(x,1, 1, false, false), null);
-    }
-
-    public int getTimeExisted() {
-        return timeExisted;
-    }
-
-    public void setTimeExisted(int timeExisted) {
-        this.timeExisted = timeExisted;
+    public InfectionStageInstance create() {
+        return new InfectionStageInstance(location());
     }
 }
