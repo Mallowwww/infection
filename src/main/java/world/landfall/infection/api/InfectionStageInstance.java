@@ -9,8 +9,10 @@ import java.util.function.Supplier;
 public class InfectionStageInstance {
     private int timeExisted = 0;
     public final ResourceLocation type;
-    public InfectionStageInstance(ResourceLocation type) {
+    public final float[] genes;
+    public InfectionStageInstance(ResourceLocation type, float[] genes) {
         this.type = type;
+        this.genes = genes;
     }
     public int getTimeExisted() {
         return timeExisted;

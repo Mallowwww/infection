@@ -54,19 +54,19 @@ public class InfectionCommand {
             return -1;
         }
         var infection = player.getData(ModAttachments.ACTIVE_INFECTION);
-        ctx.getSource().sendSystemMessage(Component.translatable("command.infection.get.success",infection.location().toString()));
+        ctx.getSource().sendSystemMessage(Component.translatable("command.infection.get.success",infection.type.toString()));
         return 1;
     }
 
     private static int infect(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         var player = ctx.getArgument("player", EntitySelector.class).findSinglePlayer(ctx.getSource());
         Holder.Reference<Infection> infectionReference = ctx.getArgument("infection", Holder.Reference.class);
-        var infection = InfectionRegistry.INFECTION_REGISTRY.get(infectionReference.key());
+        var infection = InfectionRegistry.INFECTION_REGISTRY.get(infectionReference.key()).create();
         if (infection == null)
             return -1;
         player.setData(ModAttachments.ACTIVE_INFECTION, infection);
         infection.activate();
-        ctx.getSource().sendSystemMessage(Component.translatable("command.infection.infect.success",infection.location().toString(), player.getName()));
+        ctx.getSource().sendSystemMessage(Component.translatable("command.infection.infect.success",infection.type.toString(), player.getName()));
         return 1;
     }
 

@@ -44,6 +44,11 @@ public class ModInfections {
         public ResourceLocation location() {
             return InfectionMod.path("none");
         }
+
+        @Override
+        public ResourceLocation infectionType() {
+            return ResourceLocation.parse("infections:none");
+        }
     });
     public static final DeferredHolder<Infection,Infection> NONE_INFECTION = INFECTIONS.register("none", () -> new Infection() {
         @Override
@@ -59,6 +64,11 @@ public class ModInfections {
         @Override
         public Collection<ResourceLocation> validStages() {
             return List.of(InfectionMod.path("none"));
+        }
+
+        @Override
+        public float infectionCoefficient() {
+            return 0f;
         }
     });
 

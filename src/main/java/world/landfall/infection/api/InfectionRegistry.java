@@ -4,7 +4,13 @@ import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Lifecycle;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
+import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
@@ -30,7 +36,7 @@ public class InfectionRegistry {
         if (!player.hasData(ModAttachments.ACTIVE_INFECTION))
             player.setData(
                     ModAttachments.ACTIVE_INFECTION,
-                    ModInfections.NONE_INFECTION.get()
+                    ModInfections.NONE_INFECTION.get().create()
             );
     }
 
@@ -39,23 +45,43 @@ public class InfectionRegistry {
         var player = event.getEntity();
         if (!player.hasData(ModAttachments.ACTIVE_INFECTION)) return;
         var infection = player.getData(ModAttachments.ACTIVE_INFECTION);
-        if (!INFECTION_REGISTRY.containsKey(infection.location())) {
-            throw new IllegalStateException("Error ticking infection "+infection.location().getPath()+" ! Infection is not registered.");
+        if (!INFECTION_REGISTRY.containsKey(infection.type)) {
+            throw new IllegalStateException("Error ticking infection "+infection.type.toString()+" ! Infection is not registered.");
         }
         if (!infection.isActive()) {
             return;
         }
         if (infection.getCurrentStage().type == null) {
-            LOGGER.error("Error ticking infection {} ! Current stage has no location.", infection.location().getPath());
+            LOGGER.error("Error ticking infection {} ! Current stage has no location.", infection.type.getPath());
         }
-        if (infection.validStages().stream().noneMatch(infection.getCurrentStage().type::equals)) {
-            System.out.println(infection.validStages());
+        if (infection.getType().validStages().stream().noneMatch(infection.getCurrentStage().type::equals)) {
+            System.out.println(infection.getType().validStages());
             System.out.println(infection.getCurrentStage().type);
             //LOGGER.error("Error ticking infection {} ! Current stage is not valid.", infection.location().getPath());
-            player.setData(ModAttachments.ACTIVE_INFECTION, ModInfections.NONE_INFECTION.get());
+            player.setData(ModAttachments.ACTIVE_INFECTION, ModInfections.NONE_INFECTION.get().create());
             return;
         }
         infection.tick(player);
+        var ticks = player.tickCount;
+        if (ticks % 20 == 0 && !infection.type.equals(ResourceLocation.parse("infections:none"))) {
+            var randomSource = player.level().random;
+            var level = player.level();
+            var playerPos = player.position();
+            for (var nearbyPlayer : level.getNearbyPlayers(TargetingConditions.DEFAULT, player, AABB.of(BoundingBox.fromCorners(new Vec3i(-3, -3, -3), new Vec3i(3, 3, 3))))) {
+                var nearbyInfection = nearbyPlayer.hasData(ModAttachments.ACTIVE_INFECTION) ? nearbyPlayer.getData(ModAttachments.ACTIVE_INFECTION) : null;
+                if (nearbyInfection == null || !nearbyInfection.type.equals(ResourceLocation.parse("infections:none"))) continue;
+                var nearbyPos = nearbyPlayer.position();
+                var dist = nearbyPos.subtract(playerPos).distanceTo(Vec3.ZERO);
+                var infectionCoefficient = .3f;
+                var chance = 1./dist * infectionCoefficient; // Closer you are, the more likely you are to become infected
+                var randomDouble = randomSource.nextDouble();
+                if (randomDouble * chance > .5f) {
+                    var newInfection = infection.getType().createMutated(infection);
+                    newInfection.activate();
+                    nearbyPlayer.setData(ModAttachments.ACTIVE_INFECTION, newInfection);
+                }
+            }
+        }
 
 
     }

@@ -32,6 +32,12 @@ public class CommonColdInfection extends Infection {
     public Collection<ResourceLocation> validStages() {
         return List.of(ResourceLocation.parse("infection:common_cold_initial"));
     }
+
+    @Override
+    public float infectionCoefficient() {
+        return .3f;
+    }
+
     public static class CommonColdStageOne extends InfectionStage {
 
         @Override
@@ -59,6 +65,11 @@ public class CommonColdInfection extends Infection {
         @Override
         public ResourceLocation location() {
             return InfectionMod.path("common_cold_initial");
+        }
+
+        @Override
+        public ResourceLocation infectionType() {
+            return InfectionMod.path("common_cold");
         }
     }
 }
