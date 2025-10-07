@@ -10,6 +10,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import world.landfall.infection.api.Infection;
 import world.landfall.infection.api.InfectionRegistry;
 import world.landfall.infection.api.InfectionStage;
+import world.landfall.infection.infections.CommonColdInfection;
 
 import java.util.Collection;
 import java.util.List;
@@ -20,8 +21,8 @@ public class ModInfections {
     private static final DeferredRegister<InfectionStage> STAGES = DeferredRegister.create(InfectionRegistry.STAGE_REGISTRY, InfectionMod.MODID);
     public static final DeferredHolder<InfectionStage,InfectionStage> NONE_STAGE = STAGES.register("none", () -> new InfectionStage() {
         @Override
-        public Supplier<? extends InfectionStage> nextStage() {
-            return NONE_STAGE;
+        public ResourceLocation nextStage() {
+            return NONE_STAGE.getId();
         }
 
         @Override
@@ -51,8 +52,8 @@ public class ModInfections {
         }
 
         @Override
-        public DeferredHolder<InfectionStage,InfectionStage> initialStage() {
-            return NONE_STAGE;
+        public ResourceLocation initialStage() {
+            return NONE_STAGE.getId();
         }
 
         @Override
@@ -60,6 +61,8 @@ public class ModInfections {
             return List.of(InfectionMod.path("none"));
         }
     });
+    public static final DeferredHolder<InfectionStage, InfectionStage> COMMON_COLD_INITIAL_STAGE = STAGES.register("common_cold_initial", CommonColdInfection.CommonColdStageOne::new);
+    public static final DeferredHolder<Infection, Infection> COMMON_COLD_INFECTION = INFECTIONS.register("common_cold", CommonColdInfection::new);
     public static void register(IEventBus eventBus) {
         STAGES.register(eventBus);
         INFECTIONS.register(eventBus);

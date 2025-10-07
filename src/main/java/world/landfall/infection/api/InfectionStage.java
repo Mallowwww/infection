@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 
 public abstract class InfectionStage {
     private int timeExisted = 0;
-    public abstract Supplier<? extends InfectionStage> nextStage();
+    public abstract ResourceLocation nextStage();
     public abstract int stageNumber();
     public abstract int lengthInTicks(); // make this negative if it does not advance to another stage
     public abstract Collection<Holder<MobEffect>> currentEffects();

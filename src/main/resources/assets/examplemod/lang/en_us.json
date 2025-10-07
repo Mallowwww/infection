@@ -9,5 +9,8 @@
   "examplemod.configuration.items": "Item List",
   "examplemod.configuration.logDirtBlock": "Log Dirt Block",
   "examplemod.configuration.magicNumberIntroduction": "Magic Number Text",
-  "examplemod.configuration.magicNumber": "Magic Number"
+  "examplemod.configuration.magicNumber": "Magic Number",
+  "command.infection.infect.success": "Applied %s to player %s.",
+  "command.infection.get.fail": "Player does not have infection component.",
+  "command.infection.get.success": "Player has infection %s."
 }

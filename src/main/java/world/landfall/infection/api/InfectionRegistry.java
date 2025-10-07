@@ -43,11 +43,16 @@ public class InfectionRegistry {
             throw new IllegalStateException("Error ticking infection "+infection.location().getPath()+" ! Infection is not registered.");
         }
         if (!infection.isActive()) {
-            infection.activate(); // TODO: Support infections that "gestate" for a period
             return;
         }
+        if (infection.getCurrentStage().location() == null) {
+            LOGGER.error("Error ticking infection {} ! Current stage has no location.", infection.location().getPath());
+        }
         if (infection.validStages().stream().noneMatch(infection.getCurrentStage().location()::equals)) {
-            LOGGER.error("Error ticking infection {} ! Current stage is not valid.", infection.location().getPath());
+            System.out.println(infection.validStages());
+            System.out.println(infection.getCurrentStage().location());
+            //LOGGER.error("Error ticking infection {} ! Current stage is not valid.", infection.location().getPath());
+            player.setData(ModAttachments.ACTIVE_INFECTION, ModInfections.NONE_INFECTION.get());
             return;
         }
         infection.tick(player);

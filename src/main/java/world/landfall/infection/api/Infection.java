@@ -7,6 +7,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import world.landfall.infection.InfectionMod;
+import world.landfall.infection.ModInfections;
 
 import java.util.Collection;
 import java.util.List;
@@ -22,10 +23,10 @@ public abstract class Infection {
             return;
         currentStage.tick(player);
         if (currentStage.getTimeExisted() >= currentStage.lengthInTicks() && currentStage.lengthInTicks() >= 0)
-            currentStage = currentStage.nextStage().get();
+            currentStage = ModInfections.NONE_STAGE.get();
     }
     public void activate() {
-        currentStage = initialStage().get();
+        currentStage = InfectionRegistry.STAGE_REGISTRY.get(initialStage());
     }
     public boolean isActive() {
         return currentStage != null;
@@ -34,6 +35,6 @@ public abstract class Infection {
         return currentStage;
     }
     public abstract ResourceLocation location();
-    public abstract DeferredHolder<InfectionStage,InfectionStage> initialStage();
+    public abstract ResourceLocation initialStage();
     public abstract Collection<ResourceLocation> validStages();
 }
