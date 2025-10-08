@@ -12,29 +12,40 @@ import world.landfall.infection.api.Infection;
 import world.landfall.infection.api.InfectionInstance;
 import world.landfall.infection.api.InfectionRegistry;
 
+import java.util.*;
 import java.util.function.Supplier;
 
 public class ModAttachments {
     private static final DeferredRegister<AttachmentType<?>> TYPES = DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, InfectionMod.MODID);
     public static final Supplier<AttachmentType<InfectionInstance>> ACTIVE_INFECTION = TYPES.register(
-            "active_infection", () -> AttachmentType.builder(ModInfections.NONE_INFECTION.get()::create).serialize(
+            "active_infection", () -> AttachmentType.builder(() -> ModInfections.NONE_INFECTION.get().create()).serialize(
                     RecordCodecBuilder.create(instance -> instance.group(
                             Codec.STRING.fieldOf("infection").forGetter((InfectionInstance infection) -> infection.type.toString()),
                             Codec.STRING.fieldOf("stage").forGetter((InfectionInstance infection) -> {
                                 if (infection.getCurrentStage() == null) {
                                     return "infections:none";
                                 }
-
                                 return infection.getCurrentStage().type.toString();
-                            })
-                    ).apply(instance, (infection, stage) -> {
-                        var i = InfectionRegistry.INFECTION_REGISTRY.get(ResourceLocation.parse(infection)).create();
+                            }),
+                            Codec.list(Codec.FLOAT).fieldOf("genes").forGetter((InfectionInstance infection) -> {
+                                var list = new ArrayList<Float>();
+                                for (var x : infection.genes)
+                                    list.add(x);
+                                return list;
+                            }),
+                            Codec.INT.fieldOf("ticks").forGetter((infectionInstance -> infectionInstance.getCurrentStage().timeExisted))
+                    ).apply(instance, (infectionName, stage, genes, time) -> {
+                        var genesArray = new float[16];
+                        for (int j = 0; j < 16; j++)
+                            genesArray[j] = genes.get(j);
+                        var infection = InfectionRegistry.INFECTION_REGISTRY.get(ResourceLocation.parse(infectionName)).create(genesArray);
                         System.out.println("A "+infection+" "+stage);
-                        if (i == null)
+                        if (infection == null)
                             return ModInfections.NONE_INFECTION.get().create();
-                        i.setCurrentStage(ResourceLocation.parse(stage));
-                        i.activate();
-                        return i;
+                        infection.setCurrentStage(ResourceLocation.parse(stage));
+                        infection.activate();
+                        infection.getCurrentStage().setTimeExisted(time);
+                        return infection;
                     }))
             ).build()
     );

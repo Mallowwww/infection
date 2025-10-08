@@ -4,12 +4,14 @@ import net.minecraft.client.particle.SpellParticle;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import world.landfall.infection.api.Infection;
 import world.landfall.infection.api.InfectionRegistry;
 import world.landfall.infection.api.InfectionStage;
+import world.landfall.infection.api.InfectionStageInstance;
 import world.landfall.infection.infections.CommonColdInfection;
 
 import java.util.Collection;
@@ -48,6 +50,11 @@ public class ModInfections {
         @Override
         public ResourceLocation infectionType() {
             return ResourceLocation.parse("infections:none");
+        }
+
+        @Override
+        public void tick(Player player, InfectionStageInstance instance) {
+
         }
     });
     public static final DeferredHolder<Infection,Infection> NONE_INFECTION = INFECTIONS.register("none", () -> new Infection() {

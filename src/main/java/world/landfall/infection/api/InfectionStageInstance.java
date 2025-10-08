@@ -7,7 +7,7 @@ import net.minecraft.world.entity.player.Player;
 import java.util.function.Supplier;
 
 public class InfectionStageInstance {
-    private int timeExisted = 0;
+    public int timeExisted = 0;
     public final ResourceLocation type;
     public final float[] genes;
     public InfectionStageInstance(ResourceLocation type, float[] genes) {
@@ -17,10 +17,12 @@ public class InfectionStageInstance {
     public int getTimeExisted() {
         return timeExisted;
     }
+    public void setTimeExisted(int i) {timeExisted = i;}
     public void tick(Player player) {
         timeExisted++;
         for (var x : InfectionRegistry.STAGE_REGISTRY.get(type).currentEffects())
             player.addEffect(new MobEffectInstance(x,1, 1, false, false), null);
+        getType().tick(player, this);
     }
     public InfectionStage getType() {
         return InfectionRegistry.STAGE_REGISTRY.get(type);

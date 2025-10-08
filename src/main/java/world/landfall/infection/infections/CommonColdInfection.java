@@ -1,16 +1,23 @@
 package world.landfall.infection.infections;
 
 import net.minecraft.core.Holder;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import world.landfall.infection.InfectionMod;
 import world.landfall.infection.ModInfections;
 import world.landfall.infection.api.Infection;
 import world.landfall.infection.api.InfectionRegistry;
 import world.landfall.infection.api.InfectionStage;
+import world.landfall.infection.api.InfectionStageInstance;
 
 import java.util.Collection;
 import java.util.List;
@@ -70,6 +77,25 @@ public class CommonColdInfection extends Infection {
         @Override
         public ResourceLocation infectionType() {
             return InfectionMod.path("common_cold");
+        }
+
+        @Override
+        public void tick(Player player, InfectionStageInstance instance) {
+            var random = player.getRandom();
+            var genes = instance.genes;
+            var level = player.level();
+            var chance = genes[0] * .1;
+            var ticks = player.tickCount;
+//            if (ticks%20==0)
+//                player.sendSystemMessage(Component.literal(""+genes[0]));
+
+            if (random.nextDouble() < chance && level instanceof ServerLevel serverLevel) {
+
+                serverLevel.<ParticleOptions>sendParticles(
+                        ParticleTypes.DRIPPING_WATER, player.getX() + random.nextDouble() * .8 - .4, player.getY() + random.nextDouble() * 1.8, player.getZ() + random.nextDouble() * .8 - .4, 1, 0, 0, 0, 1
+                );
+
+            }
         }
     }
 }

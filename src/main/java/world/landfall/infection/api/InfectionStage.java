@@ -18,9 +18,7 @@ public abstract class InfectionStage {
     public abstract Collection<Holder<MobEffect>> currentEffects();
     public abstract ResourceLocation location();
     public abstract ResourceLocation infectionType();
-    public void tick(Player player, InfectionStageInstance instance) {
-
-    }
+    public abstract void tick(Player player, InfectionStageInstance instance);
     public InfectionStageInstance create() {
         return new InfectionStageInstance(location(), new float[16]);
     }

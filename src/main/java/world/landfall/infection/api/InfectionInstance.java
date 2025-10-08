@@ -23,7 +23,7 @@ public class InfectionInstance {
     public void tick(Player player) {
         if (currentStage == null)
             return;
-        currentStage.getType().tick(player, currentStage);
+        currentStage.tick(player);
         if (currentStage.getTimeExisted() >= currentStage.getType().lengthInTicks() && currentStage.getType().lengthInTicks() >= 0)
             currentStage = ModInfections.NONE_STAGE.get().create();
     }

@@ -23,6 +23,9 @@ public abstract class Infection {
     public InfectionInstance create() {
         return new InfectionInstance(location(), Minecraft.getInstance().level != null ? Minecraft.getInstance().level.random : RandomSource.create());
     }
+    public InfectionInstance create(float[] genes) {
+        return new InfectionInstance(location(), genes);
+    }
     public InfectionInstance createMutated(InfectionInstance infectionInstance) {
         var random = Minecraft.getInstance().level != null ? Minecraft.getInstance().level.random : RandomSource.create();
         var newGenes = new float[16];
