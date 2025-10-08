@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import world.landfall.infection.InfectionMod;
 import world.landfall.infection.ModAttachments;
 import world.landfall.infection.ModInfections;
+import world.landfall.infection.infections.InternalInfections;
 
 @EventBusSubscriber(modid = InfectionMod.MODID)
 public class InfectionRegistry {
@@ -36,7 +37,7 @@ public class InfectionRegistry {
         if (!player.hasData(ModAttachments.ACTIVE_INFECTION))
             player.setData(
                     ModAttachments.ACTIVE_INFECTION,
-                    ModInfections.NONE_INFECTION.get().create()
+                    InternalInfections.NONE_INFECTION.get().create()
             );
     }
 
@@ -56,7 +57,7 @@ public class InfectionRegistry {
         }
         if (infection.getType().validStages().stream().noneMatch(infection.getCurrentStage().type::equals)) {
             //LOGGER.error("Error ticking infection {} ! Current stage is not valid.", infection.location().getPath());
-            player.setData(ModAttachments.ACTIVE_INFECTION, ModInfections.NONE_INFECTION.get().create());
+            player.setData(ModAttachments.ACTIVE_INFECTION, InternalInfections.NONE_INFECTION.get().create());
             return;
         }
 

@@ -4,6 +4,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import world.landfall.infection.ModInfections;
+import world.landfall.infection.infections.InternalInfections;
 
 public class InfectionInstance {
     private InfectionStageInstance currentStage;
@@ -25,7 +26,7 @@ public class InfectionInstance {
             return;
         currentStage.tick(player);
         if (currentStage.getTimeExisted() >= currentStage.getType().lengthInTicks() && currentStage.getType().lengthInTicks() >= 0)
-            currentStage = ModInfections.NONE_STAGE.get().create();
+            currentStage = InternalInfections.NONE_STAGE.get().create();
     }
     public void activate() {
         currentStage = InfectionRegistry.STAGE_REGISTRY.get(getType().initialStage()).create(this);

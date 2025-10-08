@@ -11,6 +11,7 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import world.landfall.infection.api.Infection;
 import world.landfall.infection.api.InfectionInstance;
 import world.landfall.infection.api.InfectionRegistry;
+import world.landfall.infection.infections.InternalInfections;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -18,7 +19,7 @@ import java.util.function.Supplier;
 public class ModAttachments {
     private static final DeferredRegister<AttachmentType<?>> TYPES = DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, InfectionMod.MODID);
     public static final Supplier<AttachmentType<InfectionInstance>> ACTIVE_INFECTION = TYPES.register(
-            "active_infection", () -> AttachmentType.builder(() -> ModInfections.NONE_INFECTION.get().create()).serialize(
+            "active_infection", () -> AttachmentType.builder(() -> InternalInfections.NONE_INFECTION.get().create()).serialize(
                     RecordCodecBuilder.create(instance -> instance.group(
                             Codec.STRING.fieldOf("infection").forGetter((InfectionInstance infection) -> infection.type.toString()),
                             Codec.STRING.fieldOf("stage").forGetter((InfectionInstance infection) -> {
@@ -41,7 +42,7 @@ public class ModAttachments {
                         var infection = InfectionRegistry.INFECTION_REGISTRY.get(ResourceLocation.parse(infectionName)).create(genesArray);
                         System.out.println("A "+infection+" "+stage);
                         if (infection == null)
-                            return ModInfections.NONE_INFECTION.get().create();
+                            return InternalInfections.NONE_INFECTION.get().create();
                         infection.setCurrentStage(ResourceLocation.parse(stage));
                         infection.activate();
                         infection.getCurrentStage().setTimeExisted(time);

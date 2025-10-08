@@ -13,6 +13,7 @@ import world.landfall.infection.api.InfectionRegistry;
 import world.landfall.infection.api.InfectionStage;
 import world.landfall.infection.api.InfectionStageInstance;
 import world.landfall.infection.infections.CommonColdInfection;
+import world.landfall.infection.infections.PickleboundInfection;
 
 import java.util.Collection;
 import java.util.List;
@@ -21,67 +22,11 @@ import java.util.function.Supplier;
 public class ModInfections {
     private static final DeferredRegister<Infection> INFECTIONS = DeferredRegister.create(InfectionRegistry.INFECTION_REGISTRY, InfectionMod.MODID);
     private static final DeferredRegister<InfectionStage> STAGES = DeferredRegister.create(InfectionRegistry.STAGE_REGISTRY, InfectionMod.MODID);
-    public static final Supplier<InfectionStage> NONE_STAGE = STAGES.register("none", () -> new InfectionStage() {
-        @Override
-        public ResourceLocation nextStage() {
-            return ResourceLocation.parse("infections:none");
-        }
-
-        @Override
-        public int stageNumber() {
-            return 0;
-        }
-
-        @Override
-        public int lengthInTicks() {
-            return 0;
-        }
-
-        @Override
-        public Collection<Holder<MobEffect>> currentEffects() {
-            return List.of();
-        }
-
-        @Override
-        public ResourceLocation location() {
-            return InfectionMod.path("none");
-        }
-
-        @Override
-        public ResourceLocation infectionType() {
-            return ResourceLocation.parse("infections:none");
-        }
-
-        @Override
-        public void tick(Player player, InfectionStageInstance instance) {
-
-        }
-    });
-    public static final DeferredHolder<Infection,Infection> NONE_INFECTION = INFECTIONS.register("none", () -> new Infection() {
-        @Override
-        public ResourceLocation location() {
-            return InfectionMod.path("none");
-        }
-
-        @Override
-        public ResourceLocation initialStage() {
-            return ResourceLocation.parse("infection:none");
-        }
-
-        @Override
-        public Collection<ResourceLocation> validStages() {
-            return List.of(InfectionMod.path("none"));
-        }
-
-        @Override
-        public float infectionCoefficient() {
-            return 0f;
-        }
-    });
-
 
     public static final Supplier<InfectionStage> COMMON_COLD_INITIAL_STAGE = STAGES.register("common_cold_initial", CommonColdInfection.CommonColdStageOne::new);
     public static final Supplier<Infection> COMMON_COLD_INFECTION = INFECTIONS.register("common_cold", CommonColdInfection::new);
+    public static final Supplier<InfectionStage> TINGLING_GLOW_STAGE = STAGES.register("tingling_glow", PickleboundInfection.TinglingGlowStage::new);
+    public static final Supplier<Infection> PICKLEBOUND_INFECTION = INFECTIONS.register("picklebound", PickleboundInfection::new);
     public static void register(IEventBus eventBus) {
         STAGES.register(eventBus);
         INFECTIONS.register(eventBus);

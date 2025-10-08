@@ -43,10 +43,26 @@ public class InfectionCommand {
                         .then(Commands.argument("player", EntityArgument.player())
                                 .executes(InfectionCommand::get)
                         )
+                ).then(Commands.literal("mutate")
+                        .then(Commands.argument("player", EntityArgument.player())
+                                .executes(InfectionCommand::mutate)
+                        )
                 )
         );
     }
-
+    private static int mutate(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        var player = ctx.getArgument("player", EntitySelector.class).findSinglePlayer(ctx.getSource());
+        if (!player.hasData(ModAttachments.ACTIVE_INFECTION)) {
+            ctx.getSource().sendSystemMessage(Component.translatable("command.infection.mutate.fail"));
+            return -1;
+        }
+        var infection = player.getData(ModAttachments.ACTIVE_INFECTION);
+        var newInfection = infection.getType().createMutated(infection);
+        newInfection.activate();
+        player.setData(ModAttachments.ACTIVE_INFECTION, newInfection);
+        ctx.getSource().sendSystemMessage(Component.translatable("command.infection.mutate.success",newInfection.type.toString()));
+        return 1;
+    }
     private static int get(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         var player = ctx.getArgument("player", EntitySelector.class).findSinglePlayer(ctx.getSource());
         if (!player.hasData(ModAttachments.ACTIVE_INFECTION)) {
