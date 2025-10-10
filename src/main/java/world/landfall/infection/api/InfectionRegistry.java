@@ -22,6 +22,7 @@ import world.landfall.infection.InfectionMod;
 import world.landfall.infection.ModAttachments;
 import world.landfall.infection.ModInfections;
 import world.landfall.infection.infections.InternalInfections;
+import world.landfall.infection.treatments.InternalTreatments;
 
 @EventBusSubscriber(modid = InfectionMod.MODID)
 public class InfectionRegistry {
@@ -30,7 +31,8 @@ public class InfectionRegistry {
     public static final Registry<Infection> INFECTION_REGISTRY = new RegistryBuilder<Infection>(INFECTION_REGISTRY_KEY).create();
     public static final ResourceKey<Registry<InfectionStage>> STAGE_REGISTRY_KEY = ResourceKey.createRegistryKey(InfectionMod.path("stages"));
     public static final Registry<InfectionStage> STAGE_REGISTRY = new RegistryBuilder<InfectionStage>(STAGE_REGISTRY_KEY).create();
-
+    public static final ResourceKey<Registry<Treatment>> TREATMENT_REGISTRY_KEY = ResourceKey.createRegistryKey(InfectionMod.path("treatments"));
+    public static final Registry<Treatment> TREATMENT_REGISTRY = new RegistryBuilder<Treatment>(TREATMENT_REGISTRY_KEY).create();
     @SubscribeEvent
     private static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
         var player = event.getEntity();
@@ -39,6 +41,9 @@ public class InfectionRegistry {
                     ModAttachments.ACTIVE_INFECTION,
                     InternalInfections.NONE_INFECTION.get().create()
             );
+        if (!player.hasData(ModAttachments.TREATMENT))
+            player.setData(ModAttachments.TREATMENT,
+                    InternalTreatments.NONE_TREATMENT.get().create());
     }
 
     @SubscribeEvent
@@ -89,6 +94,7 @@ public class InfectionRegistry {
     private static void onRegisterRegistries(NewRegistryEvent event) {
         event.register(INFECTION_REGISTRY);
         event.register(STAGE_REGISTRY);
+        event.register(TREATMENT_REGISTRY);
 
     }
 }

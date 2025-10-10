@@ -21,37 +21,13 @@ public class InternalInfections {
     private static final DeferredRegister<Infection> INFECTIONS = DeferredRegister.create(InfectionRegistry.INFECTION_REGISTRY, InfectionMod.MODID);
     private static final DeferredRegister<InfectionStage> STAGES = DeferredRegister.create(InfectionRegistry.STAGE_REGISTRY, InfectionMod.MODID);
 
-    public static final Supplier<InfectionStage> NONE_STAGE = STAGES.register("none", () -> new InfectionStage() {
-        @Override
-        public ResourceLocation nextStage() {
-            return ResourceLocation.parse("infections:none");
-        }
-
-        @Override
-        public int stageNumber() {
-            return 0;
-        }
-
-        @Override
-        public int lengthInTicks() {
-            return 0;
-        }
-
+    public static final Supplier<InfectionStage> NONE_STAGE = STAGES.register("none", () -> new InfectionStage(
+            InfectionMod.path("none"), InfectionMod.path("none"), InfectionMod.path("none"), 0, -1
+    ) {
         @Override
         public Collection<Holder<MobEffect>> currentEffects() {
             return List.of();
         }
-
-        @Override
-        public ResourceLocation location() {
-            return InfectionMod.path("none");
-        }
-
-        @Override
-        public ResourceLocation infectionType() {
-            return ResourceLocation.parse("infections:none");
-        }
-
         @Override
         public void tick(Player player, InfectionStageInstance instance) {
 

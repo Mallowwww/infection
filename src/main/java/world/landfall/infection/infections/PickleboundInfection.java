@@ -39,34 +39,13 @@ public class PickleboundInfection extends Infection {
     }
     public static class TinglingGlowStage extends InfectionStage {
 
-        @Override
-        public ResourceLocation nextStage() {
-            return InfectionMod.path("hive_whispers");
-        }
-
-        @Override
-        public int stageNumber() {
-            return 0;
-        }
-
-        @Override
-        public int lengthInTicks() {
-            return 24_000 * 3; // Three in-game days
+        public TinglingGlowStage() {
+            super(InfectionMod.path("tingling_glow"), InfectionMod.path("picklebound"), InfectionMod.path("hive_whispers"), 0, 24_000 * 3); // Three in-game days
         }
 
         @Override
         public Collection<Holder<MobEffect>> currentEffects() {
             return List.of();
-        }
-
-        @Override
-        public ResourceLocation location() {
-            return InfectionMod.path("tingling_glow");
-        }
-
-        @Override
-        public ResourceLocation infectionType() {
-            return InfectionMod.path("picklebound");
         }
 
         @Override

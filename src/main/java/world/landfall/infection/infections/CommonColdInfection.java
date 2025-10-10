@@ -47,19 +47,8 @@ public class CommonColdInfection extends Infection {
 
     public static class CommonColdStageOne extends InfectionStage {
 
-        @Override
-        public ResourceLocation nextStage() {
-            return ResourceLocation.parse("infection:none");
-        }
-
-        @Override
-        public int stageNumber() {
-            return 0;
-        }
-
-        @Override
-        public int lengthInTicks() {
-            return 200;
+        public CommonColdStageOne() {
+            super(InfectionMod.path("common_cold_initial"), InfectionMod.path("common_cold"), ResourceLocation.parse("infection:none"), 0, 200);
         }
 
         @Override
@@ -68,17 +57,6 @@ public class CommonColdInfection extends Infection {
                     MobEffects.WEAKNESS
             );
         }
-
-        @Override
-        public ResourceLocation location() {
-            return InfectionMod.path("common_cold_initial");
-        }
-
-        @Override
-        public ResourceLocation infectionType() {
-            return InfectionMod.path("common_cold");
-        }
-
         @Override
         public void tick(Player player, InfectionStageInstance instance) {
             var random = player.getRandom();
