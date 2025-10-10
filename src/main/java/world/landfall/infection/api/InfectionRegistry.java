@@ -44,11 +44,22 @@ public class InfectionRegistry {
         if (!player.hasData(ModAttachments.TREATMENT))
             player.setData(ModAttachments.TREATMENT,
                     InternalTreatments.NONE_TREATMENT.get().create());
+        if (!player.hasData(ModAttachments.IMMUNITY))
+            player.setData(ModAttachments.IMMUNITY,
+                    Immunity.NONE_IMMUNITY);
     }
 
     @SubscribeEvent
     private static void onPlayerPostTick(PlayerTickEvent.Post event) {
         var player = event.getEntity();
+        if (player.hasData(ModAttachments.IMMUNITY)) {
+            var immunity = player.getData(ModAttachments.IMMUNITY);
+            if (immunity.length() >= 0 && immunity.timeExisted() >= immunity.length()) {
+                player.setData(ModAttachments.IMMUNITY, Immunity.NONE_IMMUNITY);
+            }
+            else
+                player.setData(ModAttachments.IMMUNITY, new Immunity(immunity.effectiveAgainst(), immunity.length(), immunity.timeExisted()+1));
+        }
         if (!player.hasData(ModAttachments.ACTIVE_INFECTION)) return;
         var infection = player.getData(ModAttachments.ACTIVE_INFECTION);
         if (!INFECTION_REGISTRY.containsKey(infection.type)) {
@@ -62,7 +73,9 @@ public class InfectionRegistry {
         }
         if (infection.getType().validStages().stream().noneMatch(infection.getCurrentStage().type::equals)) {
             //LOGGER.error("Error ticking infection {} ! Current stage is not valid.", infection.location().getPath());
+            infection.getType().onEnd(player, infection);
             player.setData(ModAttachments.ACTIVE_INFECTION, InternalInfections.NONE_INFECTION.get().create());
+            player.setData(ModAttachments.TREATMENT, InternalTreatments.NONE_TREATMENT.get().create());
             return;
         }
 
@@ -75,6 +88,8 @@ public class InfectionRegistry {
             for (var nearbyPlayer : level.getNearbyPlayers(TargetingConditions.DEFAULT, player, AABB.of(BoundingBox.fromCorners(new Vec3i(-3, -3, -3), new Vec3i(3, 3, 3))))) {
                 var nearbyInfection = nearbyPlayer.hasData(ModAttachments.ACTIVE_INFECTION) ? nearbyPlayer.getData(ModAttachments.ACTIVE_INFECTION) : null;
                 if (nearbyInfection == null || !nearbyInfection.type.equals(ResourceLocation.parse("infections:none"))) continue;
+                if (nearbyPlayer.hasData(ModAttachments.IMMUNITY) && nearbyPlayer.getData(ModAttachments.IMMUNITY).effectiveAgainst().contains(infection.type))
+                    return;
                 var nearbyPos = nearbyPlayer.position();
                 var dist = nearbyPos.subtract(playerPos).distanceTo(Vec3.ZERO);
                 var infectionCoefficient = .3f;

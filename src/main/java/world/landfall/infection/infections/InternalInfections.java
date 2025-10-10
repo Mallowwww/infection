@@ -8,10 +8,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import world.landfall.infection.InfectionMod;
-import world.landfall.infection.api.Infection;
-import world.landfall.infection.api.InfectionRegistry;
-import world.landfall.infection.api.InfectionStage;
-import world.landfall.infection.api.InfectionStageInstance;
+import world.landfall.infection.api.*;
 
 import java.util.Collection;
 import java.util.List;
@@ -52,6 +49,11 @@ public class InternalInfections {
         @Override
         public float infectionCoefficient() {
             return 0f;
+        }
+
+        @Override
+        public void onEnd(Player player, InfectionInstance infectionInstance) {
+
         }
     });
     public static void register(IEventBus eventBus) {

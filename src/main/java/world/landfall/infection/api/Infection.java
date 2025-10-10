@@ -20,6 +20,7 @@ public abstract class Infection {
     public abstract ResourceLocation initialStage();
     public abstract Collection<ResourceLocation> validStages();
     public abstract float infectionCoefficient();
+    public abstract void onEnd(Player player, InfectionInstance infectionInstance);
     public InfectionInstance create() {
         return new InfectionInstance(location(), Minecraft.getInstance().level != null ? Minecraft.getInstance().level.random : RandomSource.create());
     }

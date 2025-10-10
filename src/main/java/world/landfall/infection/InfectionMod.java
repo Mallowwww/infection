@@ -16,6 +16,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import world.landfall.infection.infections.InternalInfections;
+import world.landfall.infection.treatments.InternalTreatments;
 
 @Mod(InfectionMod.MODID)
 public class InfectionMod {
@@ -24,7 +25,9 @@ public class InfectionMod {
     public InfectionMod(IEventBus modEventBus, ModContainer modContainer) {
         LOGGER.info("register infections");
         InternalInfections.register(modEventBus);
+        InternalTreatments.register(modEventBus);
         ModInfections.register(modEventBus);
+
         LOGGER.info("register attachments");
         ModAttachments.register(modEventBus);
         modEventBus.addListener(this::commonSetup);

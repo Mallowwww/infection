@@ -13,11 +13,9 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import world.landfall.infection.InfectionMod;
+import world.landfall.infection.ModAttachments;
 import world.landfall.infection.ModInfections;
-import world.landfall.infection.api.Infection;
-import world.landfall.infection.api.InfectionRegistry;
-import world.landfall.infection.api.InfectionStage;
-import world.landfall.infection.api.InfectionStageInstance;
+import world.landfall.infection.api.*;
 
 import java.util.Collection;
 import java.util.List;
@@ -43,6 +41,14 @@ public class CommonColdInfection extends Infection {
     @Override
     public float infectionCoefficient() {
         return .3f;
+    }
+
+    @Override
+    public void onEnd(Player player, InfectionInstance infectionInstance) {
+        if (player.hasData(ModAttachments.IMMUNITY)) {
+            var immunity = player.getData(ModAttachments.IMMUNITY);
+            player.setData(ModAttachments.IMMUNITY, new Immunity(List.of(location()), 24_000, 0));
+        }
     }
 
     public static class CommonColdStageOne extends InfectionStage {

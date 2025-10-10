@@ -5,9 +5,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.player.Player;
 import world.landfall.infection.InfectionMod;
-import world.landfall.infection.api.Infection;
-import world.landfall.infection.api.InfectionStage;
-import world.landfall.infection.api.InfectionStageInstance;
+import world.landfall.infection.ModAttachments;
+import world.landfall.infection.api.*;
 
 import java.util.Collection;
 import java.util.List;
@@ -37,6 +36,15 @@ public class PickleboundInfection extends Infection {
     public float infectionCoefficient() {
         return 0;
     }
+
+    @Override
+    public void onEnd(Player player, InfectionInstance infectionInstance) {
+        if (player.hasData(ModAttachments.IMMUNITY)) {
+            var immunity = player.getData(ModAttachments.IMMUNITY);
+            player.setData(ModAttachments.IMMUNITY, new Immunity(List.of(location()), 24_000, 0));
+        }
+    }
+
     public static class TinglingGlowStage extends InfectionStage {
 
         public TinglingGlowStage() {

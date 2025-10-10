@@ -2,6 +2,7 @@ package world.landfall.infection.treatments;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import world.landfall.infection.InfectionMod;
 import world.landfall.infection.api.InfectionInstance;
@@ -21,4 +22,7 @@ public class InternalTreatments {
 
         }
     });
+    public static void register(IEventBus eventBus) {
+        TREATMENTS.register(eventBus);
+    }
 }
